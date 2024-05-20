@@ -32,6 +32,7 @@ jobs:
           extensions: mysqli
 
   deploy:
+    needs: [avoid_reduncy, build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -40,6 +41,6 @@ jobs:
       - name: Deploy Login in DigitalOcean
         if: ${{ github.event_name == 'push' }}
         env:
-          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN_LOGIN }}
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
         run: |
           curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $DIGITALOCEAN_TOKEN_LOGIN" https://api.digitalocean.com/v2/apps/$APP_ID/deployments
